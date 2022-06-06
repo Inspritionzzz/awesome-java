@@ -12,6 +12,7 @@ public class AwesomeJavaApplication {
 		SpringApplication.run(AwesomeJavaApplication.class, args);
 		System.out.println("just a test");
 		System.out.println("just a test");
+		System.out.println("just a test");
 	}
 
 }

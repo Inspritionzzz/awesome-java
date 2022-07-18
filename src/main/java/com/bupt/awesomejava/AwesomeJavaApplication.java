@@ -13,6 +13,7 @@ public class AwesomeJavaApplication {
 		System.out.println("just a test");
 		System.out.println("just a test");
 		System.out.println("just a test");
-	}
 
+
+	}
 }

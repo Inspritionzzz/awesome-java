@@ -1,0 +1,7 @@
+// 放在root工程底下，一个项目只有一个
+rootProject.name = 'microboot-gradle'
+
+// 子工程只有被include才会被构建
+// include ':subproject01'
+// include 'subproject02'
+// include 'subproject02:subproject021'

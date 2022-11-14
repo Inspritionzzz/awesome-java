@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt.microboot.dao.UserDao">
+<!-- mapper文件内容两个一致:
+        1. namespace与mapper(dao)的全类名一致;
+        2. xml映射文件中的sql语句与mapper(dao)的方法名一致
+ -->
+
+<!-- mapper配置文件以包为单位引入时两个一致:
+        1. mapper接口所在的包和映射文件所在的包一致
+        2. mapper接口和映射文件的名字一致
+ -->
+
+<!-- mybatis获取参数值的两种方式：${} 和 #{}
+        1. ${}本质是字符串拼接：需要加单引号 '${...}'
+        2. #{}本质是占位符赋值：最好和传来的参数名保持一致
+     mybatis获取参数值的情况：
+        1. mapper接口方法的参数为单个的字面量类型
+        2. mapper接口方法的参数为多个：#{arg0} #{arg1} #{param1} #{param2} ，可以混用，
+                                   或者 '${arg0}' '${arg1}' '${param1}' '${param2}'
+                                   或者手动将这些参数放入map中存储
+        3. （推荐）mapper接口方法的参数是实体类类型参数：以属性的方法访问属性值即可
+        4. （推荐）使用@param注解命名参数：以@param注解的值为键，以参数为值
+-->
+<!-- mybatis各种查询功能
+        1. 查询返回结果有多条时不能使用实体类对象接收，可以用集合，map， List<Map<String, Object>> 接收
+        2. mybatis设置了默认的类型别名：
+            a. java.lang.Integer -> int integer
+            b. int -> _int _integer
+            c. Map -> map
+            d. String -> string
+-->
+<!-- 特殊sql执行
+        1. 模糊查询，三种写法，见 getUserByLike
+        2. 批量删除，见 deleteUsers
+        3. 动态设置表名
+        4. 获取添加功能自增的主键：
+-->
+<!-- 字段名和属性名不一致（注意三者不要同时使用）
+        1. 为字段名起别名，以属性名作为别名
+        2. 使用全局配置：在yml中配置map-underscore-to-camel-case，将下划线映射为驼峰
+        3. 使用resultMap：见employeeResultMap
+-->
+<!-- 处理多对一映射（指查询结果对应到的属性为对象）
+        1. 使用resultMap映射，见empAndDeptReaultMap
+        2. 使用association，见empAndDeptReaultMap2
+        3. （推荐）分步查询：先查询员工部门编号，再根据编号查询部门名称
+            优点：可以实现延迟加载，可配置lazy-loading-enabled: true和aggressive-lazy-loading: false实现全局延迟加载，可以在
+                 xml文件中对应的方法中设置fetchtype属性个性化设置延迟加载；
+-->
+<!-- 处理一对多映射（指查询结果对应属性为集合）
+        1. 使用resultMap映射，departmentAndEmployeeResultMap
+        2. （推荐）分步查询，见getDepartmentAndEmployeeByStepOne
+-->
+<!-- 动态SQL
+        1. if：见getUserByCondition
+        2. where：见getUserByCondition2，当where标签中有内容时，会自动生成where关键字，并将多余的and，or去掉；
+                                        当where标签中没有内容时，此时where标签没有任何效果；
+                  注意：不能将标签内容后面的and和or去掉；
+        3. trim：
+            标签中有内容时：
+                prefix|suffix：将trim标签中内容前面或后面添加指定内容
+                prefixOverrides|suffixOverrides：将trim标签中内容前面或后面添去掉指定内容
+            标签中无内容时：
+                trim标签也没有任何效果
+        4. choose when otherwise，相当于if...else if...else：when至少一个，otherwise最多一个
+        5. foreach：
+            批量删除：见deleteMoreByArray和deleteMoreByArray2
+            批量添加：见insertMoreByList
+        6. sql标签：将要查询的字段提取出来，见userConlumns
+-->
+<!-- mybatis缓存
+        1. 一级缓存：SqlSession级别，默认开启
+            四种失效的情况：（1）不同的SqlSession对应不同的一级缓存
+                          （2）同一个SqlSession但是查询条件不同
+                          （3）同一个SqlSession两次查询期间执行了任何一次增删改操作
+                          （4）同一个SqlSession两次查询期间手动清空了缓存sqlSession.clearCache()（只对一级缓存有效）
+        2. 二级缓存：SqlSessionFactory级别，需要手动开启
+            开启条件：（1）cacheEnabled="true"，默认开启；（2）在映射文件设置<cache />；
+                     （3）二级缓存在SqlSession提交或者关闭后失效；（4）查询的数据所传唤的实体类类型必须实现序列化接口；
+            失效情况：两次查询之间执行了任意的增删改，一级二级缓存均失效；
+        3. <cache />标签属性：
+            （1）eviction：设置缓存回收策略（LRU（默认），FIFO，SOFT，WEAK）
+            （2）flushInterval：刷新间隔，单位毫秒；默认不设置，也就是没有刷新间隔，缓存仅仅调用语句时刷新；
+            （3）size：引用数目，即缓存最多可以存储多少个对象；
+            （4）readOnly：只读缓存（true）：会给所有调用者返回缓存对象的相同势力，因此这些对象不能被修改；性能好；
+                          读写缓存（false）：会返回缓存对象的拷贝，会慢一些，但是安全，默认flase；
+        4. 缓存查询顺序：
+            （1）先查询二级缓存，因为二级缓存中可能会有其他程序已经查出来的数据（范围更广），可以拿来直接使用；
+            （2）二级缓存未命中，查一级缓存；
+            （3）一级缓存未命中，查数据库；
+            （4）SqlSession关闭后，一级缓存写入二级缓存；
+        5. 整合第三方缓存EHCache
+-->
+<!--    myabtis逆向工程
+
+>>>>>>> origin
+-->
+<!-- =============================================================================================================== -->
+<!--    select元素属性
+            1. id: 在命名空间中唯一的标识符，可以被用来引用这条语句。
+            2. parameterType: 将会传入这条语句的参数的类全限定名或别名。
+                              这个属性是可选的，因为 MyBatis 可以通过类型处理器（TypeHandler）推断出具体传入语句的参数，默认值为未设置（unset）。
+            3. resultType: 期望从这条语句中返回结果的类全限定名或别名。
+                           注意，如果返回的是集合，那应该设置为集合包含的类型，而不是集合本身的类型。 resultType 和 resultMap 之间只能同时使用一个。
+            4. resultMap: 对外部 resultMap 的命名引用，即自定义的映射关系。结果映射是 MyBatis 最强大的特性，如果你对其理解透彻，许多复杂的映射问题都能迎刃而解。
+                          resultType 和 resultMap 之间只能同时使用一个。
+-->
+    <!--
+    <select
+            id="selectPerson"
+            parameterType="int"
+            parameterMap="deprecated"
+            resultType="hashmap"
+            resultMap="personResultMap"
+            flushCache="false"
+            useCache="true"
+            timeout="10"
+            fetchSize="256"
+            statementType="PREPARED"
+            resultSetType="FORWARD_ONLY">
+    </select>
+    -->
+<!--    List<User> getList(UserInfoQueryParam userInfoQueryParam);-->
+    <select id="getList" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+    </select>
+
+    <select id="getUser" parameterType="String" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+        where user_id = #{id}
+    </select>
+
+    <select id="getUser2" parameterType="String" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+        where user_id = ${id}
+    </select>
+
+    <select id="checkLogin" parameterType="com.bupt.microboot.model.User" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+        where user_name = #{userName} and password = #{password}
+    </select>
+
+    <select id="checkLogin2" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+        where user_name = #{param1} and password = #{param2}
+    </select>
+
+<!--    User checkLoginByMap(Map<String, String> map);-->
+    <select id="checkLoginByMap" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+        where user_name = #{userName} and password = #{password}
+    </select>
+
+    <select id="checkLoginByParam" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+        where user_name = #{username} and password = #{password}
+    </select>
+
+    <select id="getAllUsers" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName
+        from mb_t_sys_user t
+    </select>
+
+    <select id="getUserCount" resultType="_int">
+        select
+            count(*)
+        from mb_t_sys_user t
+    </select>
+
+    <select id="getUserByIdToMap" resultType="map">
+        select
+            *
+        from mb_t_sys_user t
+        where user_id = #{id}
+    </select>
+
+    <select id="getAllUsersToMap" resultType="map">
+        select
+            *
+        from mb_t_sys_user t
+    </select>
+
+    <select id="getAllUsersToMap2" resultType="map">
+        select
+            *
+        from mb_t_sys_user t
+    </select>
+
+    <select id="getUserByLike" resultType="map">
+        select * from mb_t_sys_user t where user_name like concat('%', #{username}, '%')
+    </select>
+    <!--    select * from mb_t_sys_user t where user_name like '%${username}%'-->
+    <!--    select * from mb_t_sys_user t where user_name like concat('%', #{username}, '%')-->
+    <!--    select * from mb_t_sys_user t where user_name like concat('%', '${username}', '%')-->
+
+    <select id="getUserByTableName" resultType="com.bupt.microboot.model.User">
+        select
+            user_id  userId,
+            user_name userName,
+            password password
+        from ${tableName}
+    </select>
+
+    <resultMap id="userResultMap" type="com.bupt.microboot.model.User">
+        <id property="id" column="id"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="password" column="password"></result>
+    </resultMap>
+    <select id="getUsers" resultMap="userResultMap">
+        select * from mb_t_sys_user;
+    </select>
+
+    <select id="getUserByCondition" resultType="com.bupt.microboot.model.User">
+        select
+               *
+        from mb_t_sys_user
+        where 1 = 1
+        <if test="userId != null and userId != ''">
+            user_id = #{userId}
+        </if>
+        <if test="userName != null and userName != ''">
+            and user_name = #{userName}
+        </if>
+        <if test="password != null and password != ''">
+            and password = #{password}
+        </if>
+    </select>
+
+    <select id="getUserByCondition2" resultType="com.bupt.microboot.model.User">
+        select
+            *
+        from mb_t_sys_user
+        <where>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserByCondition3" resultType="com.bupt.microboot.model.User">
+        select
+            *
+        from mb_t_sys_user
+        <trim prefix="where" suffixOverrides="and|or" prefixOverrides="and|or">
+            <if test="userId != null and userId != ''">
+                user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+        </trim>
+    </select>
+
+    <sql id="userConlumns">id, user_id, user_name, password</sql>
+    <select id="getUserByChoose" resultType="com.bupt.microboot.model.User">
+        select
+            <include refid="userConlumns"></include>
+        from mb_t_sys_user
+        <where>
+            <choose>
+                <when test="userId != null and userId != ''">
+                    user_id = #{userId}
+                </when>
+                <when test="userName != null and userName != ''">
+                    user_name = #{userName}
+                </when>
+                <when test="password != null and password != ''">
+                    password = #{password}
+                </when>
+                <otherwise>
+                    user_id = 'csc26378'
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+
+
+<!-- =============================================================================================================== -->
+<!--    insert 元素属性-->
+    <!--
+    <insert
+            id="insertAuthor"
+            parameterType="domain.blog.Author"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty=""
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+    </insert>
+    -->
+    <insert id="addUser" parameterType="com.bupt.microboot.model.User">
+        insert into mb_t_sys_user(user_id, user_name)
+        values (#{userId}, #{userName})
+    </insert>
+
+<!--    使用数据库设置的主键自增-->
+    <insert id="addUserAutoIncre" parameterType="com.bupt.microboot.model.User">
+        insert into mb_t_sys_user(user_id, user_name)
+        values (#{userId}, #{userName})
+    </insert>
+
+<!--    设置主键自增-->
+    <insert id="addUserAutoIncre2" parameterType="com.bupt.microboot.model.User" useGeneratedKeys="true" keyProperty="id">
+        insert into mb_t_sys_user(user_id, user_name, password)
+        values (#{userId}, #{userName}, #{password})
+    </insert>
+
+<!--    插入多条数据-->
+    <insert id="addUsers" parameterType="java.util.List" useGeneratedKeys="true">
+        insert into mb_t_sys_user(user_id, user_name) values
+        <foreach item="user" collection="list" separator=",">
+            (#{user.userId}, #{user.userName})
+        </foreach>
+    </insert>
+
+<!--    生成随机ID，针对不支持自动生成主键的JDBC驱动使用-->
+    <insert id="addUserRandomID">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            select cast(random() * 1000000 as integer) a from SYSIBM.SYSDUMMY1
+        </selectKey>
+        insert into mb_t_sys_user
+        (id, username)
+        values
+        (#{id}, #{username})
+    </insert>
+
+    <insert id="insertMoreByList">
+        insert into mb_t_sys_user(user_id, user_name, password) values
+        <foreach collection="users" item="user" separator=",">
+            (#{user.userId}, #{user.userName}, #{user.password})
+        </foreach>
+    </insert>
+
+<!-- =============================================================================================================== -->
+<!--    update元素属性-->
+    <!--
+    <update
+            id="updateAuthor"
+            parameterType="domain.blog.Author"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+    </update>
+    -->
+    <update id="updateUserInfoById">
+        update mb_t_sys_user
+        set user_id = #{userId}, user_name = #{userName},
+        where id = #{userId}
+    </update>
+
+
+<!-- =============================================================================================================== -->
+    <!--    delete元素属性-->
+    <!--
+    <delete
+            id="deleteAuthor"
+            parameterType="domain.blog.Author"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+    </delete>
+    -->
+    <delete id="deleteUserById">
+        delete from mb_t_sys_user where id = #{userId}
+    </delete>
+
+    <delete id="deleteUsers">
+        delete from mb_t_sys_user where user_name in(${usernames})
+    </delete>
+
+    <delete id="deleteMoreByArray">
+        delete from mb_t_sys_user
+        where id in
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+    </delete>
+
+    <delete id="deleteMoreByArray2">
+        delete from mb_t_sys_user
+        where
+        <foreach collection="ids" item="id" separator="or">
+            id = #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt.microboot.dao.DepartmentDao">
+    <select id="getAllEmployeeAndDepartmentByStepTwo" resultType="com.bupt.microboot.model.Department">
+        select
+            did as did,
+            department_name as departmentName
+        from mb_t_sys_department as a
+        where did=#{did};
+    </select>
+
+    <resultMap id="departmentAndEmployeeResultMap" type="com.bupt.microboot.model.Department">
+        <id property="did" column="did"></id>
+        <result property="departmentName" column="department_name"></result>
+        <collection property="employeeList" ofType="com.bupt.microboot.model.Employee">
+            <id property="eid" column="eid"></id>
+            <result property="employeeName" column="employee_name"></result>
+            <result property="age" column="age"></result>
+            <result property="sex" column="sex"></result>
+            <result property="email" column="email"></result>
+        </collection>
+    </resultMap>
+    <select id="getDepartmentAndEmployee" resultMap="departmentAndEmployeeResultMap">
+        select
+            *
+        from mb_t_sys_department as a
+        left join mb_t_sys_employee as b on a.did = b.did
+        where a.did=#{did};
+    </select>
+
+    <resultMap id="departmentAndEmployeeByStepResultMap" type="com.bupt.microboot.model.Department">
+        <id property="did" column="did"></id>
+        <result property="departmentName" column="department_name"></result>
+        <collection property="employeeList"
+                    select="com.bupt.microboot.dao.EmployeeDao.getDepartmentAndEmployeeByStepTwo"
+                    column="did"
+                    fetchType="eager"
+                    >
+        </collection>
+    </resultMap>
+    <select id="getDepartmentAndEmployeeByStepOne" resultMap="departmentAndEmployeeByStepResultMap">
+        select
+            *
+        from mb_t_sys_department as a
+        where a.did=#{did};
+    </select>
+
+
+</mapper>

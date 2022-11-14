@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--    <bean id="..." class="...">-->
+<!--        &lt;!&ndash; collaborators and configuration for this bean go here &ndash;&gt;-->
+<!--    </bean>-->
+
+    <!-- 使用<import/>元素也可以从另一个（或多个）文件加载bean定义 -->
+<!--    <import resource="classpath:/config/services.groovy.xml"/>-->
+    <import resource="services.xml"/>
+</beans>

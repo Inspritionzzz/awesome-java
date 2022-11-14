@@ -1,0 +1,81 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.4'
+    // 类似maven中的<dependencyManagement>标签，只做依赖的管理，不做实际依赖，使用后引入 spring 组件不需要指定版本
+    // 可以使用spring-boot-gradle-plugin维护这两个插件的版本号
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java'
+    id 'org.gretty' version '2.2.0'
+    id 'application'
+}
+
+group = 'com.bupt'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+gretty {
+
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.4'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // https://mvnrepository.com/artifact/org.apache.groovy/groovy
+    implementation group: 'org.apache.groovy', name: 'groovy', version: '4.0.5'
+
+
+}
+// 自动检测并执行测试源中的所有单元测试
+tasks.named('test') {
+    useJUnitPlatform()
+    // include('com/bupt/microbootgradle')
+    // exclude('com/bupt/microbootgradle')
+}
+
+def map = new HashMap<String, Object>();
+map.put('action', {println 'task one ...'})
+
+task (map, 'task1') {
+    group 'A'
+    // 任务配置段：在配置阶段执行
+    println 'task begin'
+
+    // 任务的行为：在执行阶段执行
+    doFirst {
+        println 'task begin: do first'
+    }
+    doLast {
+        println 'task begin: do last'
+    }
+}
+
+task (map, 'task2') {
+    // 任务配置段：在配置阶段执行
+    println 'task2 begin'
+
+    dependsOn=['task1']
+
+    // 任务的行为：在执行阶段执行
+    doFirst {
+        println 'task2 begin: do first'
+    }
+    doLast {
+        println 'task2 begin: do last'
+    }
+}
+
+task1.doFirst {
+    println 'task begin: do first outer'
+}
+
+task1.doLast {
+    println 'task begin: do last outer'
+}

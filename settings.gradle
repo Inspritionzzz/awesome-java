@@ -1,0 +1,5 @@
+rootProject.name = 'awesome-java'
+include 'microboot-mybatis'
+include 'microboot-redis'
+include 'microboot-myrpc'
+

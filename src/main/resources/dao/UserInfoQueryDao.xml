@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.macro.mall.dao.PmsProductAttributeDao">
+    <select id="getUserInfo" resultType="java.util.List">
+        SELECT
+            user_id  userId,
+            user_name userName
+        FROM
+            crmsys.dbo.t_sys_user t
+--         WHERE
+--             t.user_id = #{userId} and t.user_name = #{userName}
+    </select>
+</mapper>

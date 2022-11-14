@@ -1,0 +1,92 @@
+// mybatis generator plugin ------ start
+//buildscript {
+//    ext {
+//        springBootVersion = '2.6.7'
+//    }
+//    repositories {
+//        maven {
+//            url "https://plugins.gradle.org/m2/"
+//        }
+//    }
+//    dependencies {
+//        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+//        classpath "gradle.plugin.com.arenagod.gradle:mybatis-generator-plugin:1.4"
+//
+//    }
+////    dependencies {
+////        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+////    }
+//}
+// mybatis generator plugin ------ end
+
+plugins {
+    id 'org.springframework.boot' version '2.6.7'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'com.arenagod.gradle.MybatisGenerator' version '1.4'
+}
+
+group = 'com.bupt.microboot'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+apply plugin: "com.arenagod.gradle.MybatisGenerator"
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    mybatisGenerator
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
+    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '10.2.1.jre17'
+    implementation 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    // testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation("org.springframework.boot:spring-boot-starter-test:2.7.2")
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.7.2'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.7.3'
+    // https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core
+    implementation group: 'org.mybatis.generator', name: 'mybatis-generator-core', version: '1.4.0'
+
+    // https://mvnrepository.com/artifact/org.apache.ant/ant
+    implementation group: 'org.apache.ant', name: 'ant', version: '1.10.11'
+
+    // https://mvnrepository.com/artifact/tk.mybatis/mapper
+    implementation group: 'tk.mybatis', name: 'mapper', version: '4.1.5'
+
+}
+
+
+//task mybatisGenerate {
+//    ant.taskdef(
+//            name: 'mbgenerator',
+//            classname: 'org.mybatis.generator.ant.GeneratorAntTask',
+//            classpath: configurations.mybatisGenerator.asPath
+//    )
+//    ant.mbgenerator(overwrite: true,
+//            configFile = 'src/main/resources/com/bupt/microboot/dao/generatorConfig.xml', verbose: true)
+//}
+
+mybatisGenerator {
+    verbose = true
+    configFile = './src/main/resources/com/bupt/microboot/dao/generatorConfig.xml'
+    //configFile = 'D:\\CodingBlocks\\awesome-java\\microboot-mybatis\\src\\main\\resources\\com\\bupt\\microboot\\dao\\generatorConfig.xml'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

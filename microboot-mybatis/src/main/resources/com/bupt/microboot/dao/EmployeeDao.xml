@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bupt.microboot.dao.EmployeeDao">
+
+    <select id="getAllEmployee" resultType="com.bupt.microboot.model.Employee">
+        select
+            eid as eid,
+            employee_name  as employeeName,
+            age as age,
+            sex as sex,
+            email as email
+        from mb_t_sys_employee;
+    </select>
+
+    <resultMap id="empAndDeptReaultMap" type="com.bupt.microboot.model.Employee">
+        <id property="eid" column="eid"></id>
+        <result property="employeeName" column="employee_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+        <result property="did" column="did"></result>
+        <result property="department.departmentName" column="department_name"></result>
+    </resultMap>
+    <select id="getAllEmployeeAndDepartment" resultMap="empAndDeptReaultMap">
+        select
+            *
+        from mb_t_sys_employee as a
+        left join mb_t_sys_department as b on a.did = b.did
+    </select>
+
+    <resultMap id="empAndDeptReaultMap2" type="com.bupt.microboot.model.Employee">
+        <id property="eid" column="eid"></id>
+        <result property="employeeName" column="employee_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+        <association property="department" javaType="com.bupt.microboot.model.Department">
+            <id property="did" column="did"></id>
+            <result property="departmentName" column="department_name"></result>
+        </association>
+    </resultMap>
+    <select id="getAllEmployeeAndDepartment2" resultMap="empAndDeptReaultMap">
+        select
+            *
+        from mb_t_sys_employee as a
+        left join mb_t_sys_department as b on a.did = b.did
+    </select>
+
+    <resultMap id="empAndDeptReaultMap3" type="com.bupt.microboot.model.Employee">
+        <id property="eid" column="eid"></id>
+        <result property="employeeName" column="employee_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+        <result property="email" column="email"></result>
+        <result property="did" column="did"></result>
+        <association property="department"
+                     select="com.bupt.microboot.dao.DepartmentDao.getAllEmployeeAndDepartmentByStepTwo"
+                     column="did"
+                     fetchType="eager">
+        </association>
+    </resultMap>
+    <select id="getAllEmployeeAndDepartmentByStepOne" resultMap="empAndDeptReaultMap3">
+        select
+            eid,
+            employee_name,
+            age,
+            sex,
+            email,
+            did
+        from mb_t_sys_employee as a
+        where eid=#{eid};
+    </select>
+
+    <select id="getDepartmentAndEmployeeByStepTwo" resultType="com.bupt.microboot.model.Employee">
+        select
+            *
+        from mb_t_sys_employee as a
+        where a.did=#{did};
+    </select>
+
+</mapper>

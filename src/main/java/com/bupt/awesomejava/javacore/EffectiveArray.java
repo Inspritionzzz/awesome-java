@@ -82,5 +82,36 @@ public class EffectiveArray {
         String all = String.join(" / ", "S", "M", "L");
         System.out.println(all);
         // 字符串不可变，这是为了方便字符串共享；
+        System.out.println("HHH".equalsIgnoreCase("hhh"));
+        // 判空
+        if (string.length() == 0) {
+            System.out.println("null!!");
+        }
+        if (string.equals("")) {
+            System.out.println("null!!");
+        }
+        if (string != null && string.length() != 0) {
+            System.out.println("null!!");
+        }
+        // length() 返回采用 UTF-16 编码给定字符串所需要的代码单元数量
+        // 有些字符采用 UTF-16 需要两个代码单元，此时使用 charAt(1) 取字符就会出错，因此不建议使用字符型
+        int cpCount = string.codePointCount(0, string.length());
+        System.out.println(cpCount);
+        System.out.println("U+1D546");
+
+        int i = 0;
+        int cp = string.codePointAt(i);
+        if (Character.isSupplementaryCodePoint(cp)){
+            i += 2;
+        } else {
+            i++;
+        }
+        System.out.println(cp);
+
+        int[] codePoints = string.codePoints().toArray();
+        System.out.println(codePoints);
+        for (int j = 0; j < codePoints.length; j++) {
+            System.out.println(codePoints[j]);
+        }
     }
 }

@@ -2,19 +2,24 @@ package com.bupt.awesomejava.javacore;
 
 import lombok.var;
 
+import java.io.Console;
+import java.util.Date;
+import java.util.Scanner;
+
 /**
  * @Description: array
  * Created by jason on 2022/11/11 9:08
  */
 
-public class EffectiveArray {
+public class EffectiveBase {
     public static final double CM_PER_INCH_1 = 2.54;   // 可以在其他类中使用
 
     public static void main(String[] args) {
         // floatType();
         // charType();
         // mathMethod();
-        stringType();
+        // stringType();
+        inAndOut();
     }
 
     /**
@@ -113,5 +118,51 @@ public class EffectiveArray {
         for (int j = 0; j < codePoints.length; j++) {
             System.out.println(codePoints[j]);
         }
+
+        String str = new String(codePoints, 0, codePoints.length); // 把码点数转换为一个字符串
+
+        // 构建字符串
+        StringBuilder builder = new StringBuilder();
+        builder.append("aaa");
+        builder.append("bbb");
+        String strBuilder = builder.toString();
     }
+
+    /**
+     * 输入输出
+     */
+    static void inAndOut() {
+        Scanner in = new Scanner(System.in);
+        System.out.println("please type some String");
+        String name = in.nextLine();    // 读取一行
+        System.out.println(name);
+        String firstName = in.next();   // 以空格符换行
+        System.out.println(firstName);
+        System.out.println("please type some Integer");
+        String age = in.next();
+        System.out.println(age);
+//        Console console = System.console();  // 必须每次读取一行
+//        String username = console.readLine("User name: ");
+//        char[] passwd = console.readPassword("Password: ");
+//        System.out.println(username + " " + passwd);
+
+        double x = 10000.0 / 3.0;
+        System.out.println(x);
+        System.out.printf("%8.2f", x);
+        System.out.println();
+        // f 表示浮点数，s 表示字符串，d 表示十进制整数
+        System.out.printf("Hello, %s. Next year, you'll be %d ", "jason", 18);
+        System.out.printf("%,.2f", 1000.0 / 3.0);
+        String message = String.format("Hello, %s. Next year, you'll be %d ", "jason", 18);
+        System.out.println();
+        // 日期和时间格式化输出
+        System.out.printf("%tc", new Date());
+        System.out.println();
+        System.out.printf("%tF", new Date());
+        System.out.println();
+        System.out.printf("%1$s %2$tB %2$te, %2$tY", "Due date:", new Date());
+        System.out.println();
+        System.out.printf("%s %tB %<te, %<tY", "Due date:", new Date());
+    }
+
 }

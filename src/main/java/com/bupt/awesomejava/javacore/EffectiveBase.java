@@ -5,8 +5,10 @@ import lombok.var;
 import java.io.Console;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -19,11 +21,27 @@ public class EffectiveBase {
     public static final double CM_PER_INCH_1 = 2.54;   // 可以在其他类中使用
 
     public static void main(String[] args) throws IOException {
+
+        // java Message -g cruel world
+        // args[0]: "-g"
+        // args[1]: "cruel"
+        // args[2]: "world"
+        if (args.length == 0 || args[0].equals("-h"))
+            System.out.print("Hello,");
+        else if (args[0].equals("-g"))
+            System.out.print("Goodbye,");
+        for (int i = 1; i < args.length; i++) {
+            System.out.println(" " + args[i]);
+        }
+        System.out.println("!");
+
         // floatType();
         // charType();
         // mathMethod();
         // stringType();
-        inAndOut();
+        // inAndOut();
+        // structure();
+        array();
     }
 
     /**
@@ -177,6 +195,82 @@ public class EffectiveBase {
         char[] chars = "just some test".toCharArray();
         printWriter.write(chars, 0, chars.length);
         printWriter.write("just some test", 0, 5);
+    }
+
+    /**
+     * 程序结构
+     */
+    static void structure() {
+        int n;
+        {
+            int k;
+        }
+
+        int i = 1;
+        String input;
+        Scanner in = new Scanner(System.in);
+        do {
+           i++;
+           System.out.println("exit?(y/n)");
+           input = in.next();
+           System.out.println(i);
+        } while(input.equals("n"));
+
+//        for (double a = 10; a != 10; a += 0.1) {
+//
+//        }
+        // switch 支持 char byte short int String Enum(switch可以推导枚举值)
+        // 可以使用 read_data: / break read_data; 用于跳出多重嵌套循环语句;
+        System.out.println("Select an option (1,2,3,4) ");
+        Scanner inNum = new Scanner(System.in);
+        int choice = inNum.nextInt();
+        switch (choice) {
+            case 1:
+                System.out.println(1);
+                break;
+            case 2:
+                System.out.println(2);
+                break;
+            case 3:
+                System.out.println(3);
+                break;
+            case 4:
+                System.out.println(4);
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * 大数
+     */
+    static void bigData() {
+        BigInteger a = BigInteger.valueOf(100);
+        BigInteger b = new BigInteger("1231232131243134242342342334234241423423423432");
+        BigInteger c = a.add(b);
+        BigInteger d = c.multiply(b.add(BigInteger.valueOf(2)));
+    }
+
+    /**
+     * 数组
+     */
+    static void array() {
+        int[] arr1 = new int[100];
+        int[] arr2 = {1, 3, 4, 5, 6};
+        int[] arr3 = new int[] {1, 3, 4, 5, 6};
+        int[] arr4 = Arrays.copyOf(arr3, arr3.length);
+        int[] arr5 = Arrays.copyOf(arr3, arr3.length * 2);
+        Arrays.sort(arr3);
+
+        int[][] arr6 = {
+                {1, 2, 3, 4},
+                {1, 2, 3, 4},
+                {1, 2, 3, 4},
+                {1, 2, 3, 4}
+        };
+        System.out.println(Arrays.deepToString(arr6));
     }
 
 }

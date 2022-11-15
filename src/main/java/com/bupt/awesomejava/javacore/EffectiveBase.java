@@ -3,6 +3,10 @@ package com.bupt.awesomejava.javacore;
 import lombok.var;
 
 import java.io.Console;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -14,7 +18,7 @@ import java.util.Scanner;
 public class EffectiveBase {
     public static final double CM_PER_INCH_1 = 2.54;   // 可以在其他类中使用
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // floatType();
         // charType();
         // mathMethod();
@@ -131,7 +135,7 @@ public class EffectiveBase {
     /**
      * 输入输出
      */
-    static void inAndOut() {
+    static void inAndOut() throws IOException {
         Scanner in = new Scanner(System.in);
         System.out.println("please type some String");
         String name = in.nextLine();    // 读取一行
@@ -163,6 +167,16 @@ public class EffectiveBase {
         System.out.printf("%1$s %2$tB %2$te, %2$tY", "Due date:", new Date());
         System.out.println();
         System.out.printf("%s %tB %<te, %<tY", "Due date:", new Date());
+        System.out.println();
+        System.out.println(System.getProperty("user.dir"));
+        Scanner readFile = new Scanner(Path.of( System.getProperty("user.dir") + "\\src\\myfile.txt"), StandardCharsets.UTF_8);
+        while (readFile.hasNext()) {
+            System.out.println(readFile.next());
+        }
+        PrintWriter printWriter = new PrintWriter(System.getProperty("user.dir") + "\\src\\myfile2.txt");
+        char[] chars = "just some test".toCharArray();
+        printWriter.write(chars, 0, chars.length);
+        printWriter.write("just some test", 0, 5);
     }
 
 }

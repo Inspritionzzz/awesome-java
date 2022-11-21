@@ -1,7 +1,5 @@
 package com.bupt.awesomejava.javacore;
 
-import lombok.var;
-
 import java.io.Console;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,12 +11,14 @@ import java.util.Date;
 import java.util.Scanner;
 
 /**
+ * @author jason
  * @Description: array
- * Created by jason on 2022/11/11 9:08
+ * Created on 2022/11/11 9:08
  */
 
 public class EffectiveBase {
-    public static final double CM_PER_INCH_1 = 2.54;   // 可以在其他类中使用
+    // 可以在其他类中使用
+    public static final double CM_PER_INCH_1 = 2.54;
 
     public static void main(String[] args) throws IOException {
 
@@ -26,10 +26,13 @@ public class EffectiveBase {
         // args[0]: "-g"
         // args[1]: "cruel"
         // args[2]: "world"
-        if (args.length == 0 || args[0].equals("-h"))
+        if (args.length == 0 || "-h".equals(args[0])){
             System.out.print("Hello,");
-        else if (args[0].equals("-g"))
+        }
+        else if ("-g".equals(args[0])) {
             System.out.print("Goodbye,");
+        }
+
         for (int i = 1; i < args.length; i++) {
             System.out.println(" " + args[i]);
         }
@@ -52,7 +55,8 @@ public class EffectiveBase {
         System.out.println(Double.NEGATIVE_INFINITY);
         System.out.println(Double.NaN);
         System.out.println(Double.isNaN(0.03));
-        System.out.println(2.0 - 1.1);  // 会损失精度，若无法接收误差可使用 BigDecimal 类
+        // 会损失精度，若无法接收误差可使用 BigDecimal 类
+        System.out.println(2.0 - 1.1);
 
     }
 
@@ -89,7 +93,8 @@ public class EffectiveBase {
         double x = 0.997;
         int nx = (int)Math.round(x);
         int a = 4;
-        a += 3.5;   // 相当于 (int)(x + 3.5)
+        // 相当于 (int)(x + 3.5)
+        a += 3.5;
         System.out.println(a);
         int b = (int)Math.round(x);
         System.out.println(b);
@@ -141,7 +146,8 @@ public class EffectiveBase {
             System.out.println(codePoints[j]);
         }
 
-        String str = new String(codePoints, 0, codePoints.length); // 把码点数转换为一个字符串
+        // 把码点数转换为一个字符串
+        String str = new String(codePoints, 0, codePoints.length);
 
         // 构建字符串
         StringBuilder builder = new StringBuilder();
@@ -156,14 +162,17 @@ public class EffectiveBase {
     static void inAndOut() throws IOException {
         Scanner in = new Scanner(System.in);
         System.out.println("please type some String");
-        String name = in.nextLine();    // 读取一行
+        // 读取一行
+        String name = in.nextLine();
         System.out.println(name);
-        String firstName = in.next();   // 以空格符换行
+        // 以空格符换行
+        String firstName = in.next();
         System.out.println(firstName);
         System.out.println("please type some Integer");
         String age = in.next();
         System.out.println(age);
-//        Console console = System.console();  // 必须每次读取一行
+        // 必须每次读取一行
+//        Console console = System.console();
 //        String username = console.readLine("User name: ");
 //        char[] passwd = console.readPassword("Password: ");
 //        System.out.println(username + " " + passwd);

@@ -4,13 +4,15 @@ import java.time.LocalDate;
 import java.util.Date;
 
 /**
+ * @author jason
  * @Description: OOP
- * Created by jason on 2022/11/16 8:46
+ * Created on 2022/11/16 8:46
  */
 
 public class EffectiveOOP {
     public static void main(String[] args) {
         Date();
+        calendar();
     }
 
     static void Date() {
@@ -30,6 +32,9 @@ public class EffectiveOOP {
         day = aThousandDaysLater.getDayOfMonth();
         System.out.println(year + "-" + month + "-" + day);
 
+    }
+
+    static void calendar() {
 
     }
 }

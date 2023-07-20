@@ -4,19 +4,19 @@
 
 ## 📖 内容
 
-- [Java 开发环境](java-develop-env.md)
-- [Java 基础语法特性](java-basic-grammar.md)
-- [Java 基本数据类型](java-data-type.md)
-- [Java String 类型](java-string.md)
-- [Java 面向对象](java-oop.md)
-- [Java 方法](java-method.md)
-- [Java 数组](java-array.md)
-- [Java 枚举](java-enum.md)
-- [Java 控制语句](java-control-statement.md)
-- [Java 异常](java-exception.md)
-- [Java 泛型](java-generic.md)
-- [Java 反射](java-reflection.md)
-- [Java 注解](java-annotation.md)
+- [Java 开发环境](env/java-develop-env.md)
+- [Java 基础语法特性](grammar/java-basic-grammar.md)
+- [Java 基本数据类型](grammar/java-data-type.md)
+- [Java String 类型](string/java-string.md)
+- [Java 面向对象](oop/java-oop.md)
+- [Java 方法](grammar/java-method.md)
+- [Java 数组](array/java-array.md)
+- [Java 枚举](enumeration/java-enum.md)
+- [Java 控制语句](grammar/java-control-statement.md)
+- [Java 异常](exception/java-exception.md)
+- [Java 泛型](generic/java-generic.md)
+- [Java 反射](reflection/java-reflection.md)
+- [Java 注解](annotation/java-annotation.md)
 
 ## 📚 资料
 

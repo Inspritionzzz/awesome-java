@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.bupt'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "16"
+sourceCompatibility = "11"
 
 configurations {
 	compileOnly {
@@ -44,6 +44,12 @@ dependencies {
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 	implementation 'io.springfox:springfox-swagger2:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	// https://mvnrepository.com/artifact/pentaho-kettle/kettle-core
+//	implementation group: 'pentaho-kettle', name: 'kettle-core', version: '8.1.0.0-365'
+//	// https://mvnrepository.com/artifact/pentaho-kettle/kettle-engine
+//	implementation group: 'pentaho-kettle', name: 'kettle-engine', version: '9.4.0.0-154'
+
+
 
 }
 

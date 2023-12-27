@@ -4,4 +4,5 @@ include 'microboot-redis'
 include 'microboot-myrpc'
 include 'microboot-crawler'
 include 'microboot-elasticsearch'
+include 'microboot-tools'
 

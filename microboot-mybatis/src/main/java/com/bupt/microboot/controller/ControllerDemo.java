@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 @RestController
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 public class ControllerDemo {
 
     @Resource

@@ -11,8 +11,15 @@
     <groupId>com.bupt</groupId>
     <artifactId>microboot-maven</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>microboot-maven</name>
     <description>microboot-maven</description>
+    <modules>
+        <module>maven-javase</module>
+        <module>maven-javaee</module>
+        <module>maven-javaee-02</module>
+        <module>maven-javaee-03</module>
+    </modules>
     <properties>
         <java.version>17</java.version>
     </properties>

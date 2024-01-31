@@ -16,7 +16,9 @@ public class EffectiveBasicProgramming {
 
         // EffectiveBasicProgramming.method02();
 
-        EffectiveBasicProgramming.method03();
+        // EffectiveBasicProgramming.method03();
+
+        EffectiveBasicProgramming.method04();
     }
 
     /**
@@ -79,6 +81,22 @@ public class EffectiveBasicProgramming {
         // StrictMath类，实现了可自由分发的数学库，www.netlib.org/fdlibm
         // System.out.println(Math.multiplyExact(1000000000, 3));
         System.out.println(1000000000 * 3);
+        double b = 9.97;
+        double nb = (int)Math.round(b);
+        System.out.println("b = " + (int)b);
 
+    }
+
+    /**
+     * 3.6 字符串
+     */
+    public static void method04() {
+        String str1 = "just a test";
+        System.out.println(str1.substring(0, 3));   // 左闭右开
+        System.out.println(str1 + 4);
+        String str2 = String.join(" / ", "S", "M", "L", "XL");
+        System.out.println("str2 = " + str2);
+        String str3 = "Java".repeat(3);
+        System.out.println("str3 = " + str3);
     }
 }

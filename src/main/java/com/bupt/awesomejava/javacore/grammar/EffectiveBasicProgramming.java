@@ -98,5 +98,22 @@ public class EffectiveBasicProgramming {
         System.out.println("str2 = " + str2);
         String str3 = "Java".repeat(3);
         System.out.println("str3 = " + str3);
+        str1 = str1.substring(0, 3) + "test!";
+        System.out.println("str1 = " + str1);
+
+        String str4 = "just a test";
+        String str5 = "just a test";
+        System.out.println(str4.equals(str5));
+        System.out.println("just a test".equals(str5)); // 不要使用“==”判断字符串相等
+
+        if (str5 != null && str5.length() != 0) {
+            System.out.println("str5 is not null");
+        }
+
+        String str6 = "just a test";
+        int n = str6.length();
+        int cpCount = str6.codePointCount(0, str6.length());
+        System.out.println("n = " + n + "  " + "cpCount = " + cpCount);
+
     }
 }

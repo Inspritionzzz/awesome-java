@@ -8,6 +8,13 @@ import java.util.Date;
 public class DateTest {
     public static void main(String[] args) {
 
+        // function01();
+
+        function02();
+
+    }
+
+    public static void function01() {
         String dateStr = "2024-01-01 00:00:00";
         Date date = DateUtil.parse(dateStr);
 
@@ -15,6 +22,32 @@ public class DateTest {
             Date newDate = DateUtil.offset(date, DateField.DAY_OF_MONTH, i);
             System.out.println(newDate);
         }
+
+    }
+
+    public static void function02() {
+
+        String dateStr = "2024-01-01";
+        Date date = DateUtil.parse(dateStr);
+
+        for (int i = 0; i < 365; i++) {
+            Date newDate = DateUtil.offset(date, DateField.DAY_OF_MONTH, i);
+            if (DateUtil.dayOfWeek(newDate) != 1) {
+                continue;
+            } else {
+                System.out.println(
+                        "第" +
+                        DateUtil.weekOfYear(newDate) +
+                        "周（" +
+                        DateUtil.format(DateUtil.beginOfWeek(newDate), "yyyyMMdd") +
+                        "-" +
+                        DateUtil.format(DateUtil.endOfWeek(newDate), "yyyyMMdd") + "）")
+                        ;
+            }
+
+        }
+
+
     }
 
 }
